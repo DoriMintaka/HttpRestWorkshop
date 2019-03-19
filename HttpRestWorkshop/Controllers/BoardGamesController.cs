@@ -23,9 +23,17 @@ namespace HttpRestWorkshop.Controllers
 
         // GET: api/<controller>
         [HttpGet]
-        public IEnumerable<BoardGame> Get()
+        public IActionResult Get()
         {
-            return this._service.Get();
+            try
+            {
+                var items = this._service.Get();
+                return this.Ok(items);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
         }
 
         // GET api/<controller>/5
@@ -47,7 +55,7 @@ namespace HttpRestWorkshop.Controllers
             }
             catch (Exception)
             {
-                return StatusCode(503);
+                return StatusCode(500);
             }
         }
 
@@ -62,7 +70,7 @@ namespace HttpRestWorkshop.Controllers
             }
             catch (Exception)
             {
-                return StatusCode(503);
+                return StatusCode(500);
             }
         }
 
@@ -82,9 +90,13 @@ namespace HttpRestWorkshop.Controllers
                 this._service.Delete(id);
                 return this.Ok();
             }
+            catch (ArgumentException)
+            {
+                return this.NotFound();
+            }
             catch (Exception)
             {
-                return StatusCode(503);
+                return StatusCode(500);
             }
         }
     }
