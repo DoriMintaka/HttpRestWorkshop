@@ -11,6 +11,8 @@ namespace HttpRestWorkshop
 
     using Microsoft.EntityFrameworkCore;
 
+    using Swashbuckle.AspNetCore.Swagger;
+
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -28,6 +30,10 @@ namespace HttpRestWorkshop
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest);
             services.AddTransient<AppDbContext>();
             services.AddTransient<BoardGamesService>();
+            services.AddSwaggerGen(c =>
+                {
+                    c.SwaggerDoc("v1", new Info { Title = "Http & Rest Workshop API", Version = "v1" });
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,6 +47,13 @@ namespace HttpRestWorkshop
             {
                 app.UseHsts();
             }
+            
+            app.UseSwagger();
+            
+            app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Http & Rest Workshop API");
+                });
 
             app.UseHttpsRedirection();
             app.UseMvc();

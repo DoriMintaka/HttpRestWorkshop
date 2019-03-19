@@ -14,7 +14,7 @@ namespace HttpRestWorkshop.Controllers
     [Route("api/[controller]")]
     public class BoardGamesController : Controller
     {
-        private BoardGamesService _service;
+        private readonly BoardGamesService _service;
 
         public BoardGamesController(BoardGamesService service)
         {
