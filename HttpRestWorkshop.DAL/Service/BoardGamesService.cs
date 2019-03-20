@@ -7,13 +7,18 @@ namespace HttpRestWorkshop.DAL.Service
 
     using HttpRestWorkshop.DAL.Models;
 
+    using Microsoft.Extensions.Caching.Memory;
+
     public class BoardGamesService : IDisposable
     {
         private readonly AppDbContext _context;
 
-        public BoardGamesService(AppDbContext context)
+        private readonly IMemoryCache _cache;
+
+        public BoardGamesService(AppDbContext context, IMemoryCache cache)
         {
             this._context = context;
+            this._cache = cache;
         }
 
         public IEnumerable<BoardGame> Get()
@@ -23,13 +28,19 @@ namespace HttpRestWorkshop.DAL.Service
 
         public BoardGame Get(int id)
         {
-            var item = this._context.BoardGames.SingleOrDefault(i => i.Id == id);
+            if (this._cache.TryGetValue(id, out BoardGame item))
+            {
+                return item;
+            }
+             
+            item = this._context.BoardGames.SingleOrDefault(i => i.Id == id);
 
             if (item == null)
             {
                 throw new ArgumentException();
             }
 
+            this._cache.Set(id, item);
             return item;
         }
 
@@ -48,6 +59,7 @@ namespace HttpRestWorkshop.DAL.Service
             }
 
             this._context.BoardGames.Remove(item);
+            this._cache.Remove(id);
 
             this._context.SaveChanges();
         }

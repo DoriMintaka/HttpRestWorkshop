@@ -28,6 +28,7 @@ namespace HttpRestWorkshop
             string connection = "Server=(localdb)\\mssqllocaldb;Database=BoardGames;Trusted_Connection=True;MultipleActiveResultSets=true";
             services.AddDbContext<AppDbContext>(o => o.UseSqlServer(connection));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest);
+            services.AddMemoryCache();
             services.AddTransient<AppDbContext>();
             services.AddTransient<BoardGamesService>();
             services.AddSwaggerGen(c =>
