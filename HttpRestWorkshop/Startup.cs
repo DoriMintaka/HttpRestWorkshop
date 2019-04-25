@@ -25,15 +25,14 @@ namespace HttpRestWorkshop
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            string connection = "Server=(localdb)\\mssqllocaldb;Database=BoardGames;Trusted_Connection=True;MultipleActiveResultSets=true";
-            services.AddDbContext<AppDbContext>(o => o.UseSqlServer(connection));
+            services.AddDbContext<AppDbContext>(o => o.UseSqlServer(Configuration.GetConnectionString("connection")));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest);
             services.AddMemoryCache();
             services.AddTransient<AppDbContext>();
             services.AddTransient<BoardGamesService>();
             services.AddSwaggerGen(c =>
                 {
-                    c.SwaggerDoc("v1", new Info { Title = "Http & Rest Workshop API", Version = "v1" });
+                    c.SwaggerDoc("v2", new Info { Title = "Board Games API", Version = "v2" });
                 });
         }
 
@@ -53,7 +52,7 @@ namespace HttpRestWorkshop
             
             app.UseSwaggerUI(c =>
                 {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Http & Rest Workshop API");
+                    c.SwaggerEndpoint("/swagger/v2/swagger.json", "Board Games API");
                 });
 
             app.UseHttpsRedirection();
