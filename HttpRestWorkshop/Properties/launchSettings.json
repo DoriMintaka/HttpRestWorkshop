@@ -20,7 +20,7 @@
     "HttpRestWorkshop": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "api/values",
+      "launchUrl": "api/boardgames",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
