@@ -1,72 +1,64 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using HttpRestWorkshop.DAL.Models;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace HttpRestWorkshop.DAL.Service
 {
-    using System.Linq;
-
-    using HttpRestWorkshop.DAL.Models;
-
-    using Microsoft.Extensions.Caching.Memory;
-
-    public class BoardGamesService : IDisposable
+    public class BoardGamesService : IBoardGamesService
     {
-        private readonly AppDbContext _context;
+        private readonly AppDbContext context;
 
-        private readonly IMemoryCache _cache;
+        private readonly IMemoryCache cache;
 
         public BoardGamesService(AppDbContext context, IMemoryCache cache)
         {
-            this._context = context;
-            this._cache = cache;
+            this.context = context;
+            this.cache = cache;
         }
 
         public IEnumerable<BoardGame> Get()
         {
-            return this._context.BoardGames.ToList();
+            return context.BoardGames.ToList();
         }
 
         public BoardGame Get(int id)
         {
-            if (this._cache.TryGetValue(id, out BoardGame item))
+            if (cache.TryGetValue(id, out BoardGame item))
             {
                 return item;
             }
              
-            item = this._context.BoardGames.SingleOrDefault(i => i.Id == id);
+            item = context.BoardGames.SingleOrDefault(i => i.Id == id);
 
             if (item == null)
             {
                 throw new ArgumentException();
             }
 
-            this._cache.Set(id, item);
+            cache.Set(id, item);
             return item;
         }
 
         public void Add(BoardGame game)
         {
-            this._context.BoardGames.Add(game);
-            this._context.SaveChanges();
+            context.BoardGames.Add(game);
+            context.SaveChanges();
         }
 
         public void Delete(int id)
         {
-            var item = this._context.BoardGames.SingleOrDefault(i => i.Id == id);
+            var item = context.BoardGames.SingleOrDefault(i => i.Id == id);
             if (item == null)
             {
                 throw new ArgumentException();
             }
 
-            this._context.BoardGames.Remove(item);
-            this._cache.Remove(id);
+            context.BoardGames.Remove(item);
+            cache.Remove(id);
 
-            this._context.SaveChanges();
-        }
-
-        public void Dispose()
-        {
-            this._context.Dispose();
+            context.SaveChanges();
         }
     }
 }

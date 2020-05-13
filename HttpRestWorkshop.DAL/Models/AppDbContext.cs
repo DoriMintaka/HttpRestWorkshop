@@ -1,7 +1,7 @@
-﻿namespace HttpRestWorkshop.DAL.Models
-{
-    using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
+namespace HttpRestWorkshop.DAL.Models
+{
     public class AppDbContext : DbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options)

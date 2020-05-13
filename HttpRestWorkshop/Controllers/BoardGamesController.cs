@@ -1,24 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using HttpRestWorkshop.DAL.Models;
+using HttpRestWorkshop.DAL.Service;
 
 namespace HttpRestWorkshop.Controllers
 {
-    using HttpRestWorkshop.DAL.Models;
-    using HttpRestWorkshop.DAL.Service;
-
     [Route("api/[controller]")]
     public class BoardGamesController : Controller
     {
-        private readonly BoardGamesService _service;
+        private readonly IBoardGamesService service;
 
-        public BoardGamesController(BoardGamesService service)
+        public BoardGamesController(IBoardGamesService service)
         {
-            this._service = service;
+            this.service = service;
         }
 
         // GET: api/<controller>
@@ -27,8 +21,8 @@ namespace HttpRestWorkshop.Controllers
         {
             try
             {
-                var items = this._service.Get();
-                return this.Ok(items);
+                var items = service.Get();
+                return Ok(items);
             }
             catch (Exception)
             {
@@ -42,16 +36,16 @@ namespace HttpRestWorkshop.Controllers
         {
             try
             {
-                var item = this._service.Get(id);
-                return this.Ok(item);
+                var item = service.Get(id);
+                return Ok(item);
             }
             catch (ArgumentException)
             {
-                return this.NotFound();
+                return NotFound();
             }
             catch (InvalidOperationException)
             {
-                return this.Conflict();
+                return Conflict();
             }
             catch (Exception)
             {
@@ -65,8 +59,8 @@ namespace HttpRestWorkshop.Controllers
         {
             try
             {
-                this._service.Add(value);
-                return this.Ok();
+                service.Add(value);
+                return Ok();
             }
             catch (Exception)
             {
@@ -87,12 +81,12 @@ namespace HttpRestWorkshop.Controllers
         {
             try
             {
-                this._service.Delete(id);
-                return this.Ok();
+                service.Delete(id);
+                return Ok();
             }
             catch (ArgumentException)
             {
-                return this.NotFound();
+                return NotFound();
             }
             catch (Exception)
             {

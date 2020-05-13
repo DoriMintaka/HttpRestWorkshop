@@ -19,6 +19,8 @@ namespace HttpRestWorkshop.DAL.Migrations
                 {
                     table.PrimaryKey("PK_BoardGames", x => x.Id);
                 });
+
+            migrationBuilder.Sql("insert into BoardGames values ('Ticket to ride'), ('Catan'), ('Uno')");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
